@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>퀴즈 생성 페이지</title>
+</head>
+<body>
+    <h1>게시판</h1>
+
+    <!-- 게시물 작성 양식 -->
+    <form action="post.php" method="post">
+        <label for="username">사용자 이름:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="message">메시지:</label>
+        <textarea id="message" name="message" rows="4" cols="50" required></textarea><br>
+        <input type="submit" value="게시">
+    </form>
+
+    <!-- 게시물 목록 -->
+    <h2>게시물 목록</h2>
+    <ul>
+        <li>
+            <strong>사용자1:</strong>
+            게시물 내용 1
+        </li>
+        <li>
+            <strong>사용자2:</strong>
+            게시물 내용 2
+        </li>
+        <!-- 게시물이 더 많이 있을 수 있음 -->
+    </ul>
+</body>
+</html>

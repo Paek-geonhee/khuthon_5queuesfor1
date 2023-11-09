@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <script src ="main.js" >  
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <style>
+        body{
+                text-align: center;
+                padding: auto;
+                
+                background-image : url('ground.jpg');
+
+            }
+        header{
+        
+            width: 100%;
+            height: 300px;
+            position: fixed;
+            border: 1px solid #bcbcbc;
+            background-color: antiquewhite;
+
+        
+            padding-right: 100px;
+
+            background-image : url('board.jpg');
+
+            }
+            
+        #container{
+            border-radius: 40px 40px 40px 40px;
+            padding-top: 300px;
+            padding-left: 150px;
+            padding-right: 150px;
+            width: 100%;
+          
+            height: auto;
+            border: 1px solid #bcbcbc;
+            float:inline-start;
+        }
+        .box{
+            font-family: 'Black Han Sans', sans-serif;
+            font-family: 'Nanum Pen Script', cursive;
+            font-size:  24px;
+
+            width: 200px;
+            height: auto;
+            border-radius: 15px 15px 15px 15px;
+            margin: 70px;
+            padding: 30px;
+            border: 1px solid #bcbcbc;
+            float:left;
+        }
+        input{
+            float:right;
+        }
+      .cate_reg{
+            width: 200px;
+            height: 80px;
+            
+      }
+      .cate_input{
+            width: 400px;
+            height: 80px;
+      }
+      .pro_crt{
+        width: 200px;
+        height: 30px;
+      }
+
+      .pro_view{
+        width: 200px;
+        height: 30px;
+      }
+
+      .line{
+        border: 3px thick solid blue;
+      }
+    </style>
+
+    <title>카테고리 선택</title>
+
+</head>
+<body>
+    <header>
+        
+        <input type='button'
+           value='등록'
+           onclick='createDiv()' id="cate_reg"/>
+           <input type="text" placeholder="카레고리 입력" id="cate_input" >
+    </header>
+
+    <div id ="container">
+
+
+    </div>
+  </body>
+  
+  </html>
