@@ -32,6 +32,7 @@ function createDiv() {
     button1 = document.createElement('button');
     button1.className = "pro_crt";
     button1.innerHTML ="문제 생성";
+    button1.addEventListener("click", moveToCreateHTML);
     newDiv.appendChild(button1);
 
     var p2 = document.createElement('div');
@@ -41,9 +42,18 @@ function createDiv() {
     button2 = document.createElement('button');
     button2.className = "pro_view";
     button2.innerHTML ="문제 보기";
+    button2.addEventListener("click", moveToSolveHTML);
     newDiv.appendChild(button2);
     
     // 모든 리소스 생성 및 박스 클래스와 결합되면
     // box 클래스를 컨테이너에 결합
     con.appendChild(newDiv);
     } 
+
+    function moveToCreateHTML(){
+        window.location.href = 'createQuiz.html';
+    }
+
+    function moveToSolveHTML(){
+        window.location.href = 'solveQuiz.html';
+    }
