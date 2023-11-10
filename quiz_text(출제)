@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주관식 퀴즈 생성기</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4; /* Light gray background */
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            margin-left: 100px;
+            margin-right: 100px;
+        }
+
+        .quiz-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+            padding: 20px;
+            border: 1px solid #3498db; /* Blue border */
+            border-radius: 5px;
+            width: 100%; /* Full width */
+            background-color: #ecf0f1; /* Light gray background */
+        }
+
+        .question-number {
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #3498db; /* Blue text color */
+        }
+
+        .question-input, .answer-input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #3498db; /* Blue border */
+            border-radius: 5px;
+            resize: vertical; /* Allow vertical resizing */
+        }
+
+        .custom-radio {
+            display: inline-block;
+            position: relative;
+            padding-left: 35px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .custom-radio input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #fff;
+            border: 1px solid #3498db;
+            border-radius: 50%;
+        }
+
+        .custom-radio input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .custom-radio .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            border: 2px solid #3498db;
+            border-width: 2px;
+            border-left: 0;
+            border-top: 0;
+            width: 8px;
+            height: 15px;
+            transform: rotate(45deg);
+            left: 6px;
+            top: 5px;
+        }
+
+        .answer-options {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-remove-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .add-remove-buttons button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #2980b9; /* Dark blue background */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .add-remove-buttons button:hover {
+            background-color: #3498db; /* Blue background on hover */
+        }
+
+        #generateButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #3498db; /* Blue background */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #generateButton:hover {
+            background-color: #2980b9; /* Dark blue background on hover */
+        }
+
+        h1 {
+            color: #3498db; /* Blue text color */
+        }
+        #generateButton {
+            color: #fff; /* Blue text color */
+        }
+    </style>
+</head>
+<body>
+    <h1>주관식 퀴즈 생성</h1>
+
+    <div id="quizContainer" class="quiz-container">
+        <!-- Initial quiz question and answer input fields -->
+        <div class="quiz-item">
+            <div class="question-number">1번 문제</div>
+            <label for="question1">문제:</label>
+            <textarea id="question1" class="question-input"></textarea>
+            <label for="dialogue1">답안:</label>
+            <textarea id="dialogue1" class="answer-input"></textarea>
+        </div>
+    </div>
+
+    <div class="add-remove-buttons">
+        <button onclick="addQuiz()">+</button>
+        <button onclick="removeQuiz()">-</button>
+    </div>
+
+    <button id="generateButton" onclick="generateQuiz()">제출</button>
+
+    <script>
+        var quizCount = 1;
+
+        function addQuiz() {
+            quizCount++;
+            var quizContainer = document.getElementById('quizContainer');
+            var newQuiz = document.createElement('div');
+            newQuiz.classList.add('quiz-item');
+            newQuiz.innerHTML = `
+                <div class="question-number">${quizCount}번 문제</div>
+                <label for="question${quizCount}">문제:</label>
+                <textarea id="question${quizCount}" class="question-input"></textarea>
+                <label for="dialogue${quizCount}">답안:</label>
+                <textarea id="dialogue${quizCount}" class="answer-input"></textarea>
+            `;
+            quizContainer.appendChild(newQuiz);
+        }
+
+        function removeQuiz() {
+            if (quizCount > 1) {
+                var quizContainer = document.getElementById('quizContainer');
+                quizContainer.removeChild(quizContainer.lastElementChild);
+                quizCount--;
+            }
+        }
+
+        function generateQuiz() {
+            var quizContainer = document.getElementById('quizContainer');
+            var quizInputs = quizContainer.getElementsByTagName('textarea');
+            var isEmpty = false;
+
+            for (var i = 0; i < quizInputs.length; i++) {
+                if (quizInputs[i].value === '') {
+                    isEmpty = true;
+                    break;
+                }
+            }
+
+            if (isEmpty) {
+                alert('문제나 답안을 모두 입력하거나 -버튼을 눌러주세요.');
+            } else {
+                // Redirect to another page or perform your desired action
+                window.location.href = 'your_quiz_generation_endpoint';
+            }
+        }
+    </script>
+</body>
+</html>
