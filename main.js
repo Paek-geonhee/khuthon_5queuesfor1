@@ -92,7 +92,8 @@ function createDiv() {
 
 function createNewCategory(){
     insertCategoryToDatabase();
-    createDiv();
+    location.reload();
+    //createDiv();
 }
 
 function moveToCreateHTML(category){
