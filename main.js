@@ -3,9 +3,13 @@ const insertCategoryToDatabase = async () => {
     const url = 'http://localhost:59999/insertCategoryToDatabase'; // 서버의 주소에 맞게 변경
     const category = document.getElementById('cate_input').value.split(' ').join('');
     if(isCategoryDuplicate(category)){
+        alert("이미 존재하는 카테고리입니다.");
         return;
     }
-
+    if(category == ""){
+        alert("카테고리를 입력해야 합니다.");
+        return;
+    }
     const dataToSend = { 
       cate:category,
          // 문자열을 정수로 변환 (안함)
@@ -32,63 +36,61 @@ const insertCategoryToDatabase = async () => {
 };
 
 // main.html에서 새로운 box를 생성하는 함수
-function createDiv() {
-    // 컨테이너에 들어갈 박스 템플릿 생성
-    const con = document.getElementById('container');
-    const text = document.getElementById('cate_input');
+// function createDiv() {
+//     // 컨테이너에 들어갈 박스 템플릿 생성
+//     const con = document.getElementById('container');
+//     const text = document.getElementById('cate_input');
     
-    if (text.value == "") {
-        alert("카테고리를 입력해야 합니다.");
-        return;
-    }
+//     if (text.value == "") {
+//         return;
+//     }
 
-    const category = text.value.trim();  // 주제를 저장
+//     const category = text.value.trim();  // 주제를 저장
 
-    // 이미 존재하는 주제인지 확인
-    if (isCategoryDuplicate(category)) {
-        alert("이미 존재하는 주제입니다.");
-        return;
-    }
+//     // 이미 존재하는 주제인지 확인
+//     if (isCategoryDuplicate(category)) {
+//         return;
+//     }
 
-    const newDiv = document.createElement('div');
-    newDiv.className = 'box';
-    newDiv.style.background = "board.jpg";
+//     const newDiv = document.createElement('div');
+//     newDiv.className = 'box';
+//     newDiv.style.background = "board.jpg";
 
-    // 입력칸에 있는 값을 불러와 카테고리 제목으로 설정
-    // 시험지 수 라는 임시 문구를 결합하여 Child로 설정
-    const p1 = document.createElement('div');
-    p1.innerHTML = '<b>' + category + '</b> <br/>';
-    newDiv.appendChild(p1);
+//     // 입력칸에 있는 값을 불러와 카테고리 제목으로 설정
+//     // 시험지 수 라는 임시 문구를 결합하여 Child로 설정
+//     const p1 = document.createElement('div');
+//     p1.innerHTML = '<b>' + category + '</b> <br/>';
+//     newDiv.appendChild(p1);
 
-    // 버튼 생성
-    // 1. 문제 생성
-    // 2. 문제 보기
-    const button1 = document.createElement('button');
-    button1.className = "pro_crt";
-    button1.innerHTML = "문제 생성";
-    button1.addEventListener("click", function () {
-        moveToCreateHTML(category);  // 해당 주제를 전달
-    });
-    newDiv.appendChild(button1);
+//     // 버튼 생성
+//     // 1. 문제 생성
+//     // 2. 문제 보기
+//     const button1 = document.createElement('button');
+//     button1.className = "pro_crt";
+//     button1.innerHTML = "문제 생성";
+//     button1.addEventListener("click", function () {
+//         moveToCreateHTML(category);  // 해당 주제를 전달
+//     });
+//     newDiv.appendChild(button1);
 
-    const p2 = document.createElement('div');
-    p2.innerHTML = "<hr class='line'>";
-    newDiv.appendChild(p2);
+//     const p2 = document.createElement('div');
+//     p2.innerHTML = "<hr class='line'>";
+//     newDiv.appendChild(p2);
 
-    const button2 = document.createElement('button');
-    button2.className = "pro_view";
-    button2.innerHTML = "문제 보기";
-    button2.addEventListener("click", function () {
-        moveToSolveHTML(category);  // 해당 주제를 전달
-    });
-    newDiv.appendChild(button2);
+//     const button2 = document.createElement('button');
+//     button2.className = "pro_view";
+//     button2.innerHTML = "문제 보기";
+//     button2.addEventListener("click", function () {
+//         moveToSolveHTML(category);  // 해당 주제를 전달
+//     });
+//     newDiv.appendChild(button2);
 
-    // 모든 리소스 생성 및 박스 클래스와 결합되면
-    // box 클래스를 컨테이너에 결합
-    con.appendChild(newDiv);
+//     // 모든 리소스 생성 및 박스 클래스와 결합되면
+//     // box 클래스를 컨테이너에 결합
+//     con.appendChild(newDiv);
 
-    text.value = "";  // 입력칸 비우기
-}
+//     text.value = "";  // 입력칸 비우기
+// }
 
 function createNewCategory(){
     insertCategoryToDatabase();
