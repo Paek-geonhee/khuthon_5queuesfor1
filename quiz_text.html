@@ -1,19 +1,26 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O/X 퀴즈 생성기</title>
-    <script>
-        category = decodeURIComponent(location.href.split("?")[1]);
-        console.log(category);
-    </script>
+    <title>주관식 퀴즈 생성기</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             text-align: center;
             margin: 20px;
             background-color: #f4f4f4; /* Light gray background */
+        }
+
+        #titleInput {
+            position: absolute;
+            top: 20px;
+            left: 98px;
+            font-size: 18px;
+            padding: 10px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            width: 30%
         }
 
         .quiz-container {
@@ -73,7 +80,7 @@
             height: 25px;
             width: 25px;
             background-color: #fff;
-            border: 1px solid #3498db;
+            border: 1px solid 0;
             border-radius: 50%;
         }
 
@@ -146,23 +153,11 @@
         #generateButton {
             color: #fff; /* Blue text color */
         }
-
-        #titleInput {
-            position: absolute;
-            top: 20px;
-            left: 98px;
-            font-size: 18px;
-            padding: 10px;
-            border: 1px solid #3498db;
-            border-radius: 5px;
-            width: 30%
-        }
     </style>
 </head>
 <body>
     <input type="text" id="titleInput" placeholder="제목을 입력하세요">
-
-    <h1>O/X 퀴즈 생성기</h1>
+    <h1>주관식 퀴즈 생성</h1>
 
     <div id="quizContainer" class="quiz-container">
         <!-- Initial quiz question and answer input fields -->
@@ -170,18 +165,8 @@
             <div class="question-number">1번 문제</div>
             <label for="question1">문제:</label>
             <textarea id="question1" class="question-input"></textarea>
-            <div class="answer-options">
-                <label class="custom-radio">
-                    O
-                    <input type="radio" name="answer1" value="O">
-                    <span class="checkmark"></span>
-                </label>
-                <label class="custom-radio">
-                    X
-                    <input type="radio" name="answer1" value="X">
-                    <span class="checkmark"></span>
-                </label>
-            </div>
+            <label for="dialogue1">답안:</label>
+            <textarea id="dialogue1" class="answer-input"></textarea>
         </div>
     </div>
 
@@ -193,7 +178,48 @@
     <button id="generateButton" onclick="generateQuiz()">제출</button>
 
     <script>
+        async function insertDataToDatabase(title, problems, answers, ct) {
+            const url = 'http://localhost:59999/insertDataToDatabase';
+            const question = problems;
+            const answer = answers;
+            const recommendation = "0";
+            const category = decodeURIComponent(location.href.split("?")[1]);
+            const dataToSend = {
+                cate: category,
+                title: title,
+                question: question,
+                answer: answer,
+                recommendation: recommendation,
+            };
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP 오류! 상태: ${response.status}`);
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+            } catch (error) {
+                console.error('서버로 데이터 전송 중 오류 발생:', error);
+            }
+        }
+
+
         var quizCount = 1;
+        var problemData = [];
+        var answerData = [];
+        var titleData = "";
+        category = decodeURIComponent(location.href.split("?")[1]);
+        
+        
 
         function addQuiz() {
             quizCount++;
@@ -204,18 +230,8 @@
                 <div class="question-number">${quizCount}번 문제</div>
                 <label for="question${quizCount}">문제:</label>
                 <textarea id="question${quizCount}" class="question-input"></textarea>
-                <div class="answer-options">
-                    <label class="custom-radio">
-                        O
-                        <input type="radio" name="answer${quizCount}" value="O">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="custom-radio">
-                        X
-                        <input type="radio" name="answer${quizCount}" value="X">
-                        <span class="checkmark"></span>
-                    </label>
-                </div>
+                <label for="dialogue${quizCount}">답안:</label>
+                <textarea id="dialogue${quizCount}" class="answer-input"></textarea>
             `;
             quizContainer.appendChild(newQuiz);
         }
@@ -228,26 +244,45 @@
             }
         }
 
+       
+
         function generateQuiz() {
-            var quizContainer = document.getElementById('quizContainer');
-            var quizInputs = quizContainer.getElementsByTagName('textarea');
-            var isEmpty = false;
+        var titleInput = document.getElementById('titleInput');
+        titleData = titleInput.value;
 
-            for (var i = 0; i < quizInputs.length; i++) {
-                if (quizInputs[i].value === '') {
-                    isEmpty = true;
-                    break;
-                }
-                //여기서 입력받은 문제와 답들을 받아온다.
-            }
+        var quizContainer = document.getElementById('quizContainer');
+        var quizItems = quizContainer.getElementsByClassName('quiz-item');
 
-            if (isEmpty) {
-                alert('문제를 모두 입력하거나 -버튼을 눌러주세요.');
-            } else {
-                // Redirect to another page or perform your desired action
-                window.location.href = 'your_quiz_generation_endpoint';
+        for (var i = 0; i < quizItems.length; i++) {
+            var question = quizItems[i].querySelector('.question-input').value;
+            var answer = quizItems[i].querySelector('.answer-input').value;
+            
+            if (question !== '' && answer !== '') {
+                // 문제와 답변을 각각의 배열에 저장
+                problemData.push(question);
+                answerData.push(answer);
             }
         }
+
+        if (titleData !== '' && problemData.length > 0 && answerData.length > 0) {
+            titleData = '"' +titleData+ '"';
+            var problemDataString = '"' + problemData.join(', ') + '"';
+            var answerDataString = '"' + answerData.join(', ') + '"';
+
+            console.log("제목 데이터:", titleData);
+            console.log("문제 데이터:", problemDataString);
+            console.log("답변 데이터:", answerDataString);
+
+            insertDataToDatabase(titleData, problemDataString, answerDataString, category);
+            alert("정상적으로 문제가 생성되었습니다.");
+
+            window.location.href = 'createQuiz.html?' + category;
+        } else {
+            alert('제목, 문제, 답안을 모두 입력하세요.');
+        }
+       
+            
+    }
     </script>
 </body>
 </html>

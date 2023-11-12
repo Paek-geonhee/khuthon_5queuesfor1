@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>solveQuiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        #timer {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .question-container {
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #ecf0f1;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .answer-options {
+            margin-top: 10px;
+        }
+
+        .answer-feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+         /* 정답과 오답에 따른 색상 지정 */
+         .answer-feedback.correct {
+            color: #2ecc71; /* 초록색 */
+        }
+
+        .answer-feedback.incorrect {
+            color: #e74c3c; /* 빨간색 */
+        }
+
+        .submit-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .submit-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>시험 시작!!</h1>
+
+    <div id="timer">3:00</div>
+
+    <div class="question-container">
+        <div class="question-number">1. 중앙 처리 장치(CPU)는 데이터를 저장하거나 검색할 수 있는 장치이다. (O/X)</div>
+        <div class="answer-options">
+            <label>
+                <input type="radio" name="q1" value="O"> O
+            </label>
+            <label>
+                <input type="radio" name="q1" value="X"> X
+            </label>
+        </div>
+        <div class="answer-feedback" id="feedback1"></div>
+    </div>
+
+    <div class="question-container">
+        <div class="question-number">2. 캐시 메모리는 주기억장치보다 속도가 빠르며 작은 용량을 가진다. (O/X)</div>
+        <div class="answer-options">
+            <label>
+                <input type="radio" name="q2" value="O"> O
+            </label>
+            <label>
+                <input type="radio" name="q2" value="X"> X
+            </label>
+        </div>
+        <div class="answer-feedback" id="feedback2"></div>
+    </div>
+
+    <div class="question-container">
+        <div class="question-number">3. RAM은 컴퓨터가 전원을 끄면 저장된 데이터가 사라진다. (O/X)</div>
+        <div class="answer-options">
+            <label>
+                <input type="radio" name="q3" value="O"> O
+            </label>
+            <label>
+                <input type="radio" name="q3" value="X"> X
+            </label>
+        </div>
+        <div class="answer-feedback" id="feedback3"></div>
+    </div>
+
+    <button class="submit-button" onclick="confirmSubmit()">제출</button>
+
+    <script>
+        let timer = 180;
+        const timerElement = document.getElementById('timer');
+
+        function updateTimer() {
+            const minutes = Math.floor(timer / 60);
+            const seconds = timer % 60;
+            timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            timer--;
+
+            if (timer < 0) {
+                clearInterval(timerInterval);
+                alert('종료되었습니다.');
+                submitExam();
+            }
+        }
+
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        function confirmSubmit() {
+            const unansweredQuestions = document.querySelectorAll('input[type="radio"]:not(:checked)');
+            if (unansweredQuestions.length != 3) {
+                const confirmMessage = "해결하지 못한 문제가 있습니다. 정말로 제출하시겠습니까?";
+                const userConfirmed = confirm(confirmMessage);
+
+                if (userConfirmed) {
+                    submitExam();
+                }
+            } 
+            else {
+                const confirmMessage = "제출하시겠습니까?";
+                const userConfirmed = confirm(confirmMessage);
+
+                if (userConfirmed) {
+                    submitExam();
+                }
+            }
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+
+            const answers = {
+                q1: document.querySelector('input[name="q1"]:checked'),
+                q2: document.querySelector('input[name="q2"]:checked'),
+                q3: document.querySelector('input[name="q3"]:checked'),
+            };
+
+            const correctAnswers = {
+                q1: 'O',
+                q2: 'O',
+                q3: 'O',
+            };
+
+            let score = 0;
+            
+            for (const question in answers) {
+                const feedbackElement = document.getElementById(`feedback${question[1]}`);
+                if (answers[question]) {
+                    if (answers[question].value === correctAnswers[question]) {
+                        feedbackElement.textContent = '정답';
+                        feedbackElement.classList.add('correct');
+                        score +=1;
+                    } else {
+                        feedbackElement.textContent = '오답';
+                        feedbackElement.classList.add('incorrect');
+                    }
+                } else {
+                    feedbackElement.textContent = '오답';
+                    feedbackElement.classList.add('incorrect');
+                }
+            }
+
+            // 최소 점수를 0으로 설정
+            score = Math.max(0, score);
+
+            alert(`점수: ${score}/3`);
+            
+            window.location.href = 'selectQuiz.html';
+        }
+    </script>
+</body>
+</html>

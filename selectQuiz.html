@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시험지 파일 목록</title>
+    <script>
+        category = decodeURIComponent(location.href.split("?")[1]);
+        console.log(category);
+        var titleList;
+
+        function setDiv(TestName) {
+            // 카테고리 제목과 시험지 개수를 파라미터로 받아서 div 생성
+            // 컨테이너에 들어갈 박스 템플릿 생성
+            const con = document.getElementById('file-container');
+            //const text = categoryName;
+
+            //const category = text.value.trim(); //주제 저장
+
+            const newDiv = document.createElement('div');
+            newDiv.className = 'file-item';
+            //newDiv.style.background = "board.jpg";
+
+            // 입력칸에 있는 값을 불러와 카테고리 제목으로 설정
+            // 시험지 수 라는 임시 문구를 결합하여 Child로 설정
+            const p1 = document.createElement('div');
+            p1.innerHTML = TestName;    //              <<<<<<  테스트이름 받아와서 여기에 넣기.
+            newDiv.appendChild(p1);
+
+            // 버튼 생성
+            // 1. 문제 생성
+            // 2. 문제 보기
+            const buttonsDiv = document.createElement('div');
+            buttonsDiv.className = 'buttons';
+
+            const button1 = document.createElement('button');
+            button1.className = "start-button";
+            button1.innerHTML = "시험 시작!";
+            button1.addEventListener("click", function () {
+                moveToTestHTML(TestName);  // 해당 주제를 전달
+            });
+            buttonsDiv.appendChild(button1);
+
+            const button2 = document.createElement('button');
+            button2.className = "recommend-button";
+            button2.innerHTML = "추천";
+            button2.addEventListener("click", function () {
+                //moveToSolveHTML(categoryName);  // 해당 주제를 전달
+            });
+            buttonsDiv.appendChild(button2);
+
+            newDiv.appendChild(buttonsDiv);
+
+            // 모든 리소스 생성 및 박스 클래스와 결합되면
+            // box 클래스를 컨테이너에 결합
+            con.appendChild(newDiv);
+
+            //text.value = "";  // 입력칸 비우기
+        }
+        function moveToTestHTML(TestName) {
+            window.location.href = 'solveQuiz.html?' + TestName;
+        }
+
+        // function moveToSolveHTML(category) {
+        //     window.location.href = 'selectQuiz.html?' + category;
+        // }
+
+        function getTestFromTable() {
+    // 클라이언트에서 서버로 HTTP 요청을 보내는 부분
+            fetch('http://localhost:59999/getTestFromTable', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cate: category }),
+        })
+        .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP 오류! 상태: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 데이터를 콘솔에 출력
+                    
+                    titleList = data.result;
+                    console.log('서버에서 받은 데이터:', titleList);
+                    titleList.forEach(element => {
+                        console.log("데이터는 " + JSON.stringify(element));
+                        setDiv(element['제목']);
+                    });
+                })
+                .catch(error => {
+                    console.error('오류:', error);
+                    // JSON 데이터를 가져오지 못한 경우에 경고창 띄우기
+                    
+                    alert('서버에서 데이터를 가져오지 못했습니다. 나중에 다시 시도해주세요.');
+                });
+        }
+
+        window.onload = function () {
+            //setDiv("기초단계 컴퓨터구조 문제지");
+            //setDiv("간단한 컴퓨터구조 문제");
+            //setDiv("컴퓨터구조 개론");
+            //setDiv("왕 어려운 컴퓨터구조 문제지");
+            getTestFromTable();
+            
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f4;
+            /* Light gray background */
+        }
+
+        #file-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            margin-left: 100px;
+            margin-right: 100px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #3498db;
+            /* Blue border */
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            /* Light gray background */
+            margin: 10px 0;
+        }
+
+        .file-name {
+            font-weight: bold;
+            color: #3498db;
+            /* Blue text color for file names */
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .start-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #e74c3c;
+            /* Red background for start button */
+            color: #fff;
+            /* White text color for start button */
+            border: none;
+            border-radius: 5px;
+        }
+
+        .start-button:hover {
+            background-color: #c0392b;
+            /* Dark red background on hover */
+        }
+
+        .recommend-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #27ae60;
+            /* Green background for recommendation button */
+            color: #fff;
+            /* White text color for recommendation button */
+            border: none;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .recommend-button:hover {
+            background-color: #2ecc71;
+            /* Dark green background on hover */
+        }
+
+        .recommend-count {
+            font-size: 18px;
+            font-weight: bold;
+
+            margin-left: 10px;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #3498db;
+            /* Blue background for back button */
+            color: #fff;
+            /* White text color for back button */
+            border: none;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+            /* Dark blue background on hover */
+        }
+
+        h1 {
+            color: #2980b9;
+            /* White text color for h1, start button, and recommendation button */
+        }
+
+        .start-button,
+        .recommend-button {
+            color: #fff;
+            /* White text color for h1, start button, and recommendation button */
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1 id="header"></h1>
+    <script>
+        element = document.getElementById("header");
+        element.innerText = category + " 시험지 파일 목록";
+
+
+
+    </script>
+
+    <div id="file-container">
+        
+    </div>
+
+    <button class="back-button" onclick="goBack()">뒤로가기</button>
+
+    <script>
+        var recommended = [false, false, false]; // Initialize recommended status
+
+        function startExam(filename) {
+            // Replace this with actual exam start logic
+            alert('시험 시작!');
+
+            window.location.href = filename;
+        }
+
+        function recommend(fileNumber) {
+            var countElement = document.getElementById('count' + fileNumber);
+            var recommendButton = document.getElementById('recommendButton' + fileNumber);
+
+            if (!recommended[fileNumber - 1]) { // Check if not recommended
+                countElement.textContent = parseInt(countElement.textContent) + 1;
+                recommended[fileNumber - 1] = true; // Mark as recommended
+                recommendButton.style.backgroundColor = '#aaaaaa'; // Change background color to gray
+                recommendButton.style.cursor = 'not-allowed'; // Change cursor to not-allowed
+                recommendButton.disabled = true; // Disable the button
+                recommendButton.textContent = '추천 완료'; // Change button text
+            } else {
+                alert('이미 추천하셨습니다.');
+            }
+        }
+
+        function goBack() {
+            // Replace this with your back button functionality
+            window.location.href = 'main.html';
+        }
+
+
+    </script>
+
+    </script>
+</body>
+
+</html>
