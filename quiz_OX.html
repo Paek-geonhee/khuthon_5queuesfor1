@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>O/X 퀴즈 생성기</title>
+    <script>
+        category = decodeURIComponent(location.href.split("?")[1]);
+        console.log(category);
+    </script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -142,9 +146,22 @@
         #generateButton {
             color: #fff; /* Blue text color */
         }
+
+        #titleInput {
+            position: absolute;
+            top: 20px;
+            left: 98px;
+            font-size: 18px;
+            padding: 10px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            width: 30%
+        }
     </style>
 </head>
 <body>
+    <input type="text" id="titleInput" placeholder="제목을 입력하세요">
+
     <h1>O/X 퀴즈 생성기</h1>
 
     <div id="quizContainer" class="quiz-container">
@@ -221,6 +238,7 @@
                     isEmpty = true;
                     break;
                 }
+                //여기서 입력받은 문제와 답들을 받아온다.
             }
 
             if (isEmpty) {

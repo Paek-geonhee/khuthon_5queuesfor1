@@ -1,32 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>퀴즈 생성 페이지</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        category = decodeURIComponent(location.href.split("?")[1]);
+        console.log(category);
+    </script>
+    <title>퀴즈를 내봅시다</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+            margin-top : 350px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
-    <h1>게시판</h1>
+    <h1>어떤 유형의 퀴즈를 만들까요?</h1>
+    <script>
+        document.write('<span style="font-size: 23px;">' + category + '에 대한</span> ');
+    </script>
+    <button onclick="redirectToOX()">
+        <span style="font-size: 20px;">OX 퀴즈 만들기</span>
+    </button>
+    <button onclick="redirectToTEXT()">
+        <span style="font-size: 20px;">단답형 퀴즈 만들기</span>
+    </button>
+   
+    <script>
+        function redirectToOX() {
+            window.location.href = 'quiz_OX.html?' + category;
+        }
+        function redirectToTEXT() {
+            window.location.href = 'quiz_text.html?' + category;
+        }
+    </script>
 
-    <!-- 게시물 작성 양식 -->
-    <form action="post.php" method="post">
-        <label for="username">사용자 이름:</label>
-        <input type="text" id="username" name="username" required><br>
-        <label for="message">메시지:</label>
-        <textarea id="message" name="message" rows="4" cols="50" required></textarea><br>
-        <input type="submit" value="게시">
-    </form>
+</body>
+</html><!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        category = decodeURIComponent(location.href.split("?")[1]);
+        console.log(category);
+    </script>
+    <title>퀴즈를 내봅시다</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+            margin-top : 350px;
+        }
 
-    <!-- 게시물 목록 -->
-    <h2>게시물 목록</h2>
-    <ul>
-        <li>
-            <strong>사용자1:</strong>
-            게시물 내용 1
-        </li>
-        <li>
-            <strong>사용자2:</strong>
-            게시물 내용 2
-        </li>
-        <!-- 게시물이 더 많이 있을 수 있음 -->
-    </ul>
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    
 </body>
 </html>

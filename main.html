@@ -8,11 +8,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
     <style>
-        body{
+       body{
                 text-align: center;
                 padding: auto;
-                
-                background-image : url('ground.jpg');
+              
 
             }
         header{
@@ -26,11 +25,12 @@
         
             padding-right: 100px;
 
-            background-image : url('board.jpg');
+            background-image : url('손흥민2.jpg');
 
             }
             
         #container{
+            background-color: lightblue;
             border-radius: 40px 40px 40px 40px;
             padding-top: 300px;
             padding-left: 150px;
@@ -38,14 +38,14 @@
             width: 100%;
           
             height: auto;
-            border: 1px solid #bcbcbc;
+            border: 1px solid #3498db;
             float:inline-start;
         }
         .box{
             font-family: 'Black Han Sans', sans-serif;
             font-family: 'Nanum Pen Script', cursive;
-            font-size:  24px;
-
+            font-size:  36px;
+            background-color: #3498db;
             width: 200px;
             height: auto;
             border-radius: 15px 15px 15px 15px;
@@ -58,13 +58,14 @@
             float:right;
         }
       .cate_reg{
-            width: 200px;
-            height: 80px;
+            width: 150px;
+            height: 50px;
             
       }
       .cate_input{
-            width: 400px;
-            height: 80px;
+            width: 300px;
+            height: 45px;
+            font-size : 20px;
       }
       .pro_crt{
         width: 200px;
@@ -85,13 +86,13 @@
 
 </head>
 <body>
-    <header>
+  <header>
         
-        <input type='button'
-           value='등록'
-           onclick='createDiv()' id="cate_reg"/>
-           <input type="text" placeholder="카레고리 입력" id="cate_input" >
-    </header>
+    <input type='button'
+       value='등록'
+       onclick='createNewCategory()' id="cate_reg" class="cate_reg"/>
+       <input type="text" placeholder="카테고리 입력" id="cate_input" class="cate_input" >
+</header>
 
     <div id ="container">
 
