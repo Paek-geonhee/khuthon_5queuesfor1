@@ -114,9 +114,16 @@
         let timer = 180;
         const timerElement = document.getElementById('timer');
 
+        title = decodeURIComponent(location.href.split("?")[1]);
+        category = decodeURIComponent(location.href.split("?")[2]);
+        console.log(title +", " + category);
+
         function updateTimer() {
             const minutes = Math.floor(timer / 60);
             const seconds = timer % 60;
+            var row;
+
+            var questionList, answerList;
             timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
             timer--;
 
@@ -190,6 +197,59 @@
             
             window.location.href = 'selectQuiz.html';
         }
+
+        function getTestPaper() {
+    // 클라이언트에서 서버로 HTTP 요청을 보내는 부분
+            fetch('http://localhost:59999/getTestPaper', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ titleName: title,
+            categoryName : category }),
+        })
+        .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP 오류! 상태: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 데이터를 콘솔에 출력
+                    
+                    row = JSON.stringify(data.results[0]);
+          
+
+                    // 문자열 재조정 과정
+                    sp = row.split(',');
+                    sp.shift();
+                    sp.shift();
+                    problemMin = 0;
+                    newStr = sp[problemMin].split(':');
+                    sp[problemMin] = newStr[1].replace('"','');
+                    
+                    len = sp.length;
+                    problemMax= len/2 -1;
+                    ansMin = problemMax + 1;
+                    ansMax = len-1;
+                    sp[problemMax] = sp[problemMax].replace('"','');
+                    sp[ansMin] = sp[ansMin].split(':')[1].replace('"','');
+                    sp[ansMax] = sp[ansMax].replace('"}','');
+                    console.log(newStr);
+                    for(var str in sp){
+                        console.log("str : " + sp[str]);
+                    }
+                    alert("문제를 불러왔습니다.");
+                    
+                })
+                .catch(error => {
+                    console.error('오류:', error);
+                    // JSON 데이터를 가져오지 못한 경우에 경고창 띄우기
+                    
+                    alert('서버에서 데이터를 가져오지 못했습니다. 나중에 다시 시도해주세요.');
+                });
+        }
+        getTestPaper();
     </script>
 </body>
 </html>
