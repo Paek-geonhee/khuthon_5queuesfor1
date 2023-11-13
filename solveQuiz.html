@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>solveQuiz</title>
+    <title>문제를 풀어봅시다.</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -84,6 +84,7 @@
     <script>
         let timer = 180;
         const timerElement = document.getElementById('timer');
+        var answerSet = [];
 
         title = decodeURIComponent(location.href.split("?")[1]);
         category = decodeURIComponent(location.href.split("?")[2]);
@@ -219,32 +220,57 @@
                     // 데이터를 콘솔에 출력
                     
                     row = JSON.stringify(data.results[0]);
-                    console.log(row);
-
+                    var allSet=[];
+                    var questionSet = [];
                     // 문자열 재조정 과정
-                    sp = row.split(',');
-                    sp.shift();
-                    sp.shift();
+                    sp = row.split('@');
                     problemMin = 0;
-                    newStr = sp[problemMin].split(':');
-                    sp[problemMin] = newStr[1].replace('"','');
-                    
+                    sp[problemMin] = sp[problemMin].split(':')[3].replace('"','');
                     len = sp.length;
-                    problemMax= len/2 -1;
-                    ansMin = problemMax + 1;
-                    ansMax = len-1;
-                    sp[problemMax] = sp[problemMax].replace('"','');
-                    sp[ansMin] = sp[ansMin].split(':')[1].replace('"','');
-                    sp[ansMax] = sp[ansMax].replace('"}','');
-                    console.log(newStr);
-                    for(var str in sp){
-                        console.log("str : " + sp[str]);
+                    console.log(sp);
+                    if(len==1){
+                        temp = sp[problemMin].replace('","',',').split(',');
+                        questionSet.push(temp[0]);
+                        answerSet.push(temp[1].replace('"',''));
+
+
+                       // console.log(questionSet);
+                        alert("확인 버튼을 누르면 시험이 시작됩니다.");
+                        
+                        createDiv(1,questionSet[0]);
+                        //return;
                     }
-                    alert("확인 버튼을 누르면 시험이 시작됩니다.");
+                    else{
+                        for(var i = problemMin; i<parseInt(len/2); i++){
+       
+                        questionSet.push(sp[i]);
+                        }
+                        tempContainer = sp[parseInt(len/2)].replace('","답안":"','@').split('@');
+                        lastQuestion = tempContainer[0];
+    
+                        questionSet.push(lastQuestion);
                     
-                    for (var i = problemMin; i <= problemMax; i++){
-                        createDiv(i+1,sp[i]);
+                        
+                        problemMax= parseInt(len/2); // 5인 경우 2
+                        firstAnswer = tempContainer[1];
+
+                        answerSet.push(firstAnswer);
+                        for(var i =problemMax+1; i<len; i++){
+
+                            answerSet.push(sp[i].replace('"}',''));
+                        }
+       
+                        
+                        
+                        alert("확인 버튼을 누르면 시험이 시작됩니다.");
+                        
+                        for (var i = 0; i <= parseInt(len/2); i++){
+                            createDiv(i+1,questionSet[i]);
+                        }
                     }
+                    
+                    console.log(questionSet);
+                        console.log(answerSet); 
 
                     // sp 배열과 인덱스 번호를 이용해 문제를 만들고, 답안 형식에 따라(O/X or 문자열) 서로 다른 형태의 박스를 제작
                 })

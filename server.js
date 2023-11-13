@@ -63,11 +63,12 @@ printAllValues();
 
 function setTestPaper(){
     app.post('/insertDataToDatabase', async (req, res) => {
-        const { cate, recommendation, title, question, answer} = req.body;
-        console.log(req.body.tableName);
+        const { cate, title, recommendation, question, answer} = req.body;
+        console.log(req.body.cate);
+        console.log(question, answer)
         const query = `INSERT INTO ${cate}(추천, 제목, 문제, 답안) VALUES( ${recommendation} , ${title} , ${question} , ${answer} )`;
     
-        db.query(query, [cate, recommendation, title, question, answer], (err, result) => {
+        db.query(query, (err, result) => {
             if (err) {
                 console.error('MySQL query error:', err);
                 
