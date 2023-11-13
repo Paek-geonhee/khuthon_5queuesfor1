@@ -63,11 +63,12 @@ printAllValues();
 
 function setTestPaper(){
     app.post('/insertDataToDatabase', async (req, res) => {
-        const { cate, recommendation, title, question, answer} = req.body;
-        console.log(req.body.tableName);
+        const { cate, title, recommendation, question, answer} = req.body;
+        console.log(req.body.cate);
+        console.log(question, answer)
         const query = `INSERT INTO ${cate}(추천, 제목, 문제, 답안) VALUES( ${recommendation} , ${title} , ${question} , ${answer} )`;
     
-        db.query(query, [cate, recommendation, title, question, answer], (err, result) => {
+        db.query(query, (err, result) => {
             if (err) {
                 console.error('MySQL query error:', err);
                 
@@ -199,6 +200,28 @@ function printAllTitle() {
     });
 }
 printAllTitle();
+
+// 테이블명, 문제 제목 데이터를 이용해 문제를 출력하도록 데이터를 가져오는 함수
+app.post('/getTestPaper', (req, res) => {
+
+    const table = req.body.titleName;
+    const category = req.body.categoryName;
+
+    const query = `SELECT * FROM ${category} WHERE 제목='${table}'`;
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('MySQL query error:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        // 결과를 정리해서 클라이언트에 전송
+
+        res.json({ results });
+        console.log("Request에 대한 response를 완료" + results);
+    });
+});
+
 
 // 서버 리스닝
 app.listen(port, () => {

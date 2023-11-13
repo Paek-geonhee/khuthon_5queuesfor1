@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>solveQuiz</title>
+    <title>문제를 풀어봅시다.</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -49,6 +49,11 @@
             color: #e74c3c; /* 빨간색 */
         }
 
+        .answer_input{
+            width: 100%;
+            height: 40px;
+        }
+
         .submit-button {
             padding: 10px 20px;
             font-size: 16px;
@@ -64,59 +69,33 @@
         }
     </style>
 </head>
-<body>
+<body id="body">
     <h1>시험 시작!!</h1>
 
     <div id="timer">3:00</div>
+        <div id="contents-container">
 
-    <div class="question-container">
-        <div class="question-number">1. 중앙 처리 장치(CPU)는 데이터를 저장하거나 검색할 수 있는 장치이다. (O/X)</div>
-        <div class="answer-options">
-            <label>
-                <input type="radio" name="q1" value="O"> O
-            </label>
-            <label>
-                <input type="radio" name="q1" value="X"> X
-            </label>
-        </div>
-        <div class="answer-feedback" id="feedback1"></div>
-    </div>
 
-    <div class="question-container">
-        <div class="question-number">2. 캐시 메모리는 주기억장치보다 속도가 빠르며 작은 용량을 가진다. (O/X)</div>
-        <div class="answer-options">
-            <label>
-                <input type="radio" name="q2" value="O"> O
-            </label>
-            <label>
-                <input type="radio" name="q2" value="X"> X
-            </label>
         </div>
-        <div class="answer-feedback" id="feedback2"></div>
-    </div>
-
-    <div class="question-container">
-        <div class="question-number">3. RAM은 컴퓨터가 전원을 끄면 저장된 데이터가 사라진다. (O/X)</div>
-        <div class="answer-options">
-            <label>
-                <input type="radio" name="q3" value="O"> O
-            </label>
-            <label>
-                <input type="radio" name="q3" value="X"> X
-            </label>
-        </div>
-        <div class="answer-feedback" id="feedback3"></div>
-    </div>
+    
 
     <button class="submit-button" onclick="confirmSubmit()">제출</button>
 
     <script>
         let timer = 180;
         const timerElement = document.getElementById('timer');
+        var answerSet = [];
+
+        title = decodeURIComponent(location.href.split("?")[1]);
+        category = decodeURIComponent(location.href.split("?")[2]);
+        console.log(title +", " + category);
 
         function updateTimer() {
             const minutes = Math.floor(timer / 60);
             const seconds = timer % 60;
+            var row;
+
+            var questionList, answerList;
             timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
             timer--;
 
@@ -128,6 +107,36 @@
         }
 
         const timerInterval = setInterval(updateTimer, 1000);
+
+        function createDiv(index, questionText){
+            // 컨테이너 제작
+            bodyTag = document.getElementById("contents-container");
+
+            newDiv = document.createElement('div');
+            newDiv.className = "question-container";
+
+            // 요소 제작
+            // 1. 문제 표시
+            question = document.createElement('div');
+            question.className = "question-number";
+            question.innerHTML = "<b>" + index + ". " + questionText + "</b>";
+            newDiv.appendChild(question);
+
+            // 2. 답안 작성란 표시
+            answer = document.createElement('div');
+            answer.className = "answer-options";
+
+            answer_input = document.createElement('input');
+            answer_input.type = "text";
+            answer_input.className = "answer_input";
+            answer_input.placeholder = "답안을 입력하세요.";
+            answer.appendChild(answer_input);
+
+            newDiv.appendChild(answer);
+
+            bodyTag.appendChild(newDiv);
+
+        }
 
         function confirmSubmit() {
             const unansweredQuestions = document.querySelectorAll('input[type="radio"]:not(:checked)');
@@ -190,6 +199,91 @@
             
             window.location.href = 'selectQuiz.html';
         }
+
+        function getTestPaper() {
+    // 클라이언트에서 서버로 HTTP 요청을 보내는 부분
+            fetch('http://localhost:59999/getTestPaper', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ titleName: title,
+            categoryName : category }),
+        })
+        .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP 오류! 상태: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 데이터를 콘솔에 출력
+                    
+                    row = JSON.stringify(data.results[0]);
+                    var allSet=[];
+                    var questionSet = [];
+                    // 문자열 재조정 과정
+                    sp = row.split('@');
+                    problemMin = 0;
+                    sp[problemMin] = sp[problemMin].split(':')[3].replace('"','');
+                    len = sp.length;
+                    console.log(sp);
+                    if(len==1){
+                        temp = sp[problemMin].replace('","',',').split(',');
+                        questionSet.push(temp[0]);
+                        answerSet.push(temp[1].replace('"',''));
+
+
+                       // console.log(questionSet);
+                        alert("확인 버튼을 누르면 시험이 시작됩니다.");
+                        
+                        createDiv(1,questionSet[0]);
+                        //return;
+                    }
+                    else{
+                        for(var i = problemMin; i<parseInt(len/2); i++){
+       
+                        questionSet.push(sp[i]);
+                        }
+                        tempContainer = sp[parseInt(len/2)].replace('","답안":"','@').split('@');
+                        lastQuestion = tempContainer[0];
+    
+                        questionSet.push(lastQuestion);
+                    
+                        
+                        problemMax= parseInt(len/2); // 5인 경우 2
+                        firstAnswer = tempContainer[1];
+
+                        answerSet.push(firstAnswer);
+                        for(var i =problemMax+1; i<len; i++){
+
+                            answerSet.push(sp[i].replace('"}',''));
+                        }
+       
+                        
+                        
+                        alert("확인 버튼을 누르면 시험이 시작됩니다.");
+                        
+                        for (var i = 0; i <= parseInt(len/2); i++){
+                            createDiv(i+1,questionSet[i]);
+                        }
+                    }
+                    
+                    console.log(questionSet);
+                        console.log(answerSet); 
+
+                    // sp 배열과 인덱스 번호를 이용해 문제를 만들고, 답안 형식에 따라(O/X or 문자열) 서로 다른 형태의 박스를 제작
+                })
+                .catch(error => {
+                    console.error('오류:', error);
+                    // JSON 데이터를 가져오지 못한 경우에 경고창 띄우기
+                    
+                    alert('서버에서 데이터를 가져오지 못했습니다. 나중에 다시 시도해주세요.');
+                });
+        }
+        //createDiv(1, "TEST");
+        getTestPaper();
+        
     </script>
 </body>
 </html>

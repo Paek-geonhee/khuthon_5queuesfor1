@@ -3,39 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        category = decodeURIComponent(location.href.split("?")[1]);
-        console.log(category);
-    </script>
+    <link rel="stylesheet" href="createQuiz.css">
     <title>퀴즈를 내봅시다</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            margin: 20px;
-            margin-top : 350px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-    </style>
+    
 </head>
 <body>
     <h1>어떤 유형의 퀴즈를 만들까요?</h1>
-    <script>
-        document.write('<span style="font-size: 23px;">' + category + '에 대한</span> ');
+    <script src="createQuiz.js">
     </script>
     <button onclick="redirectToOX()">
         <span style="font-size: 20px;">OX 퀴즈 만들기</span>
@@ -43,52 +17,6 @@
     <button onclick="redirectToTEXT()">
         <span style="font-size: 20px;">단답형 퀴즈 만들기</span>
     </button>
-   
-    <script>
-        function redirectToOX() {
-            window.location.href = 'quiz_OX.html?' + category;
-        }
-        function redirectToTEXT() {
-            window.location.href = 'quiz_text.html?' + category;
-        }
-    </script>
 
-</body>
-</html><!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        category = decodeURIComponent(location.href.split("?")[1]);
-        console.log(category);
-    </script>
-    <title>퀴즈를 내봅시다</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            margin: 20px;
-            margin-top : 350px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-            background-color: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-    </style>
-</head>
-<body>
-    
 </body>
 </html>
