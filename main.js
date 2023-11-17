@@ -23,79 +23,35 @@ const insertCategoryToDatabase = async () => {
             },
             body: JSON.stringify(dataToSend),
         });
-
+        console.log("fetch done");
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
         const responseData = await response.json();
-        console.log(responseData); // 서버로부터 받은 응답을 출력합니다.
+        //console.log(responseData.message); // 서버로부터 받은 응답을 출력합니다.
+        return responseData.message;
     } catch (error) {
         console.error('Error sending data to the server:', error);
+        throw error;
     }
 };
 
-// main.html에서 새로운 box를 생성하는 함수
-// function createDiv() {
-//     // 컨테이너에 들어갈 박스 템플릿 생성
-//     const con = document.getElementById('container');
-//     const text = document.getElementById('cate_input');
-    
-//     if (text.value == "") {
-//         return;
-//     }
 
-//     const category = text.value.trim();  // 주제를 저장
 
-//     // 이미 존재하는 주제인지 확인
-//     if (isCategoryDuplicate(category)) {
-//         return;
-//     }
-
-//     const newDiv = document.createElement('div');
-//     newDiv.className = 'box';
-//     newDiv.style.background = "board.jpg";
-
-//     // 입력칸에 있는 값을 불러와 카테고리 제목으로 설정
-//     // 시험지 수 라는 임시 문구를 결합하여 Child로 설정
-//     const p1 = document.createElement('div');
-//     p1.innerHTML = '<b>' + category + '</b> <br/>';
-//     newDiv.appendChild(p1);
-
-//     // 버튼 생성
-//     // 1. 문제 생성
-//     // 2. 문제 보기
-//     const button1 = document.createElement('button');
-//     button1.className = "pro_crt";
-//     button1.innerHTML = "문제 생성";
-//     button1.addEventListener("click", function () {
-//         moveToCreateHTML(category);  // 해당 주제를 전달
-//     });
-//     newDiv.appendChild(button1);
-
-//     const p2 = document.createElement('div');
-//     p2.innerHTML = "<hr class='line'>";
-//     newDiv.appendChild(p2);
-
-//     const button2 = document.createElement('button');
-//     button2.className = "pro_view";
-//     button2.innerHTML = "문제 보기";
-//     button2.addEventListener("click", function () {
-//         moveToSolveHTML(category);  // 해당 주제를 전달
-//     });
-//     newDiv.appendChild(button2);
-
-//     // 모든 리소스 생성 및 박스 클래스와 결합되면
-//     // box 클래스를 컨테이너에 결합
-//     con.appendChild(newDiv);
-
-//     text.value = "";  // 입력칸 비우기
-// }
-
-function createNewCategory(){
-    insertCategoryToDatabase();
-    location.reload();
-    //createDiv();
+async function createNewCategory() {
+    try {
+        const message = await insertCategoryToDatabase();
+        if(message){
+            alert("카테고리가 정상적으로 등록되었습니다.");
+            location.reload();
+        }
+            
+        //alert(message); // 서버로부터의 응답 메세지를 알림으로 표시
+        
+    } catch (error) {
+        console.error('Error creating new category:', error);
+        // 에러 처리
+    }
 }
 
 function moveToCreateHTML(category){

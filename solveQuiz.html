@@ -139,65 +139,68 @@
         }
 
         function confirmSubmit() {
-            const unansweredQuestions = document.querySelectorAll('input[type="radio"]:not(:checked)');
-            if (unansweredQuestions.length != 3) {
-                const confirmMessage = "해결하지 못한 문제가 있습니다. 정말로 제출하시겠습니까?";
-                const userConfirmed = confirm(confirmMessage);
+            
+            const confirmMessage = "제출하시겠습니까?";
+            const userConfirmed = confirm(confirmMessage);
 
-                if (userConfirmed) {
-                    submitExam();
-                }
-            } 
-            else {
-                const confirmMessage = "제출하시겠습니까?";
-                const userConfirmed = confirm(confirmMessage);
-
-                if (userConfirmed) {
-                    submitExam();
-                }
+            if (userConfirmed) {
+                submitExam();
             }
         }
 
         function submitExam() {
             clearInterval(timerInterval);
-
-            const answers = {
-                q1: document.querySelector('input[name="q1"]:checked'),
-                q2: document.querySelector('input[name="q2"]:checked'),
-                q3: document.querySelector('input[name="q3"]:checked'),
-            };
-
-            const correctAnswers = {
-                q1: 'O',
-                q2: 'O',
-                q3: 'O',
-            };
-
-            let score = 0;
+            score = 0;
             
-            for (const question in answers) {
-                const feedbackElement = document.getElementById(`feedback${question[1]}`);
-                if (answers[question]) {
-                    if (answers[question].value === correctAnswers[question]) {
-                        feedbackElement.textContent = '정답';
-                        feedbackElement.classList.add('correct');
-                        score +=1;
-                    } else {
-                        feedbackElement.textContent = '오답';
-                        feedbackElement.classList.add('incorrect');
-                    }
-                } else {
-                    feedbackElement.textContent = '오답';
-                    feedbackElement.classList.add('incorrect');
-                }
+            var answerContainer = document.getElementById("contents-container");
+            var answerDiv = answerContainer.getElementsByClassName("question-container");
+            for(var i=0; i<answerDiv.length; i++){
+                var theAnswer = answerDiv[i].querySelector(".answer_input").value;
+                if(theAnswer == answerSet[i])
+                     score++;
             }
 
-            // 최소 점수를 0으로 설정
-            score = Math.max(0, score);
-
-            alert(`점수: ${score}/3`);
             
-            window.location.href = 'selectQuiz.html';
+            console.log("--------");
+           // console.log(answerSet);
+           // console.log(answerInputSet);
+            // const answers = {
+            //     q1: document.querySelector('input[name="q1"]:checked'),
+            //     q2: document.querySelector('input[name="q2"]:checked'),
+            //     q3: document.querySelector('input[name="q3"]:checked'),
+            // };
+
+            // const correctAnswers = {
+            //     q1: 'O',
+            //     q2: 'O',
+            //     q3: 'O',
+            // };
+
+            // let score = 0;
+            
+            // for (const question in answers) {
+            //     const feedbackElement = document.getElementById(`feedback${question[1]}`);
+            //     if (answers[question]) {
+            //         if (answers[question].value === correctAnswers[question]) {
+            //             feedbackElement.textContent = '정답';
+            //             feedbackElement.classList.add('correct');
+            //             score +=1;
+            //         } else {
+            //             feedbackElement.textContent = '오답';
+            //             feedbackElement.classList.add('incorrect');
+            //         }
+            //     } else {
+            //         feedbackElement.textContent = '오답';
+            //         feedbackElement.classList.add('incorrect');
+            //     }
+            // }
+
+            // 최소 점수를 0으로 설정
+            // score = Math.max(0, score);
+
+             alert(`점수: ${score}/${answerDiv.length}`);
+            
+             window.location.href = 'selectQuiz.html?' + category;
         }
 
         function getTestPaper() {

@@ -84,7 +84,7 @@ setTestPaper();
 function insertCategoryToDatabase(){
    
         // 카테고리 테이블 생성 쿼리
-        
+        console.log("Trying to insert category");
         app.post('/insertCategoryToDatabase', async (req, res) => {
             const category = req.body.cate;
          
@@ -93,9 +93,9 @@ function insertCategoryToDatabase(){
             db.query(query, (err, result) => {
                 if (err) {
                     console.error('MySQL query error:', err);
-                    
+                    res.status(500).json({ error: 'Internal Server Error' });
                 } else {
-                    return;
+                    res.json({ message: 'Category successfully inserted!' });
                 }
             });
         });
